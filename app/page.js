@@ -2,7 +2,7 @@
 
 export default function Home() {
   return (
-    <div>
+    <div className="py-22">
       Hello
     </div>
   );
