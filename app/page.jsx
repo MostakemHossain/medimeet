@@ -1,3 +1,4 @@
+import CallToAction from "@/components/call-to-action";
 import "./globals.css";
 import Banner from "@/components/Banner";
 import HowItWorks from "@/components/how-it-works";
@@ -11,6 +12,7 @@ export default function Home() {
      <HowItWorks/>
      <Pricing/>
      <Testimonial/>
+     <CallToAction/>
     </div>
   );
 }
