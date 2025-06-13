@@ -3,6 +3,7 @@ import { Badge } from "./ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Check, Stethoscope } from "lucide-react";
 import { creditBenefits } from "@/lib/data";
+import Price from "./Price";
 
 const Pricing = () => {
   return (
@@ -26,6 +27,7 @@ const Pricing = () => {
           </p>
         </div>
         <div>
+          <Price/>
           <Card className={"mt-12 bg-muted/20 border-emerald-900/30"}>
             <CardHeader>
               <CardTitle
