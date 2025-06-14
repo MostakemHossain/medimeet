@@ -16,7 +16,7 @@ import { Badge } from "./ui/badge";
 
 const Header = async () => {
   const user = await checkUser();
-  if(user.role==="PATIENT"){
+  if(user?.role==="PATIENT"){
     await checkAndAllocateCredits(user);
   }
   return (
