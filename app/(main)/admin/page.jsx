@@ -1,7 +1,7 @@
 import { getPendingDoctors, getVerifiedDoctors } from "@/actions/admin";
 import { TabsContent } from "@/components/ui/tabs";
 import { PendingDoctors } from "./components/pending-doctors";
-import VerifiedDoctors from "./components/verified-doctors";
+import { VerifiedDoctors } from "./components/verified-doctors";
 
 
 export default async function AdminPage() {
@@ -19,7 +19,7 @@ export default async function AdminPage() {
       </TabsContent>
 
       <TabsContent value="doctors" className="border-none p-0">
-      <VerifiedDoctors doctors={pendingDoctorsData.doctors || []} />
+      <VerifiedDoctors doctors={verifiedDoctorsData.doctors || []} />
       </TabsContent>
 
       <TabsContent value="payouts" className="border-none p-0">
