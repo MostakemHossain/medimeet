@@ -54,13 +54,12 @@ export function AvailabilitySettings({ slots }) {
     if (loading) return;
 
     const formData = new FormData();
-   
 
     const today = new Date().toISOString().split("T")[0];
 
     // Create date objects
     const startDate = createLocalDateFromTime(data.startTime);
-    const endDate = createLocalDateFromTime(data.endTime); 
+    const endDate = createLocalDateFromTime(data.endTime);
 
     if (startDate >= endDate) {
       toast.error("End time must be after start time");
@@ -75,11 +74,8 @@ export function AvailabilitySettings({ slots }) {
   };
 
   useEffect(() => {
-    console.log(data);
-    console.log(data?.success)
     if (data && data?.success) {
       setShowForm(false);
-        
       toast.success("Availability slots updated successfully");
     }
   }, [data]);
@@ -92,7 +88,6 @@ export function AvailabilitySettings({ slots }) {
       return "Invalid time";
     }
   };
-  console.log(slots?.length)
 
   return (
     <Card className="border-emerald-900/20">

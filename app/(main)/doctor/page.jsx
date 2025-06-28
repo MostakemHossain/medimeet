@@ -10,7 +10,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "../../../components/ui/tabs";
-import { AvailabilitySettings } from "./_components/appointment-settings";
+import { AvailabilitySettings } from "./_components/availability-settings";
 
 export default async function DoctorDashboardPage() {
   const user = await getCurrentUser();
@@ -27,7 +27,6 @@ export default async function DoctorDashboardPage() {
   if (user?.verificationStatus !== "VERIFIED") {
     redirect("/doctor/verification");
   }
-
   return (
     <Tabs
       defaultValue="earnings"
@@ -58,7 +57,7 @@ export default async function DoctorDashboardPage() {
       </TabsList>
       <div className="md:col-span-3">
         <TabsContent value="appointments" className="border-none p-0">
-          <AvailabilitySettings slots={appointmentsData.slots || []}/>
+        <AvailabilitySettings slots={availabilityData.slots || []} />
         </TabsContent>
         <TabsContent value="availability" className="border-none p-0">
           <div>
