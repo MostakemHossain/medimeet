@@ -7,7 +7,6 @@ import { deductCreditsForAppointment } from "@/actions/credits";
 import { Vonage } from "@vonage/server-sdk";
 import { addDays, addMinutes, format, isBefore, endOfDay } from "date-fns";
 import { Auth } from "@vonage/auth";
-
 // Initialize Vonage Video API client
 const credentials = new Auth({
   applicationId: process.env.NEXT_PUBLIC_VONAGE_APPLICATION_ID,
@@ -405,5 +404,83 @@ export async function getAvailableTimeSlots(doctorId) {
   } catch (error) {
     console.error("Failed to fetch available slots:", error);
     throw new Error("Failed to fetch available time slots: " + error.message);
+  }
+}
+
+/**
+ * Mark an appointment as completed (only by doctor after end time)
+ */
+export async function markAppointmentCompleted(formData) {
+  const { userId } = await auth();
+
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
+
+  try {
+    const doctor = await db.user.findUnique({
+      where: {
+        clerkUserId: userId,
+        role: "DOCTOR",
+      },
+    });
+
+    if (!doctor) {
+      throw new Error("Doctor not found");
+    }
+
+    const appointmentId = formData.get("appointmentId");
+
+    if (!appointmentId) {
+      throw new Error("Appointment ID is required");
+    }
+
+    // Find the appointment
+    const appointment = await db.appointment.findUnique({
+      where: {
+        id: appointmentId,
+        doctorId: doctor.id, // Ensure appointment belongs to this doctor
+      },
+      include: {
+        patient: true,
+      },
+    });
+
+    if (!appointment) {
+      throw new Error("Appointment not found or not authorized");
+    }
+
+    // Check if appointment is currently scheduled
+    if (appointment.status !== "SCHEDULED") {
+      throw new Error("Only scheduled appointments can be marked as completed");
+    }
+
+    // Check if current time is after the appointment end time
+    const now = new Date();
+    const appointmentEndTime = new Date(appointment.endTime);
+
+    if (now < appointmentEndTime) {
+      throw new Error(
+        "Cannot mark appointment as completed before the scheduled end time"
+      );
+    }
+
+    // Update the appointment status to COMPLETED
+    const updatedAppointment = await db.appointment.update({
+      where: {
+        id: appointmentId,
+      },
+      data: {
+        status: "COMPLETED",
+      },
+    });
+
+    revalidatePath("/doctor");
+    return { success: true, appointment: updatedAppointment };
+  } catch (error) {
+    console.error("Failed to mark appointment as completed:", error);
+    throw new Error(
+      "Failed to mark appointment as completed: " + error.message
+    );
   }
 }
